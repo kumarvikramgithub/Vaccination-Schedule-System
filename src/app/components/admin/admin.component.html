@@ -1,0 +1,125 @@
+<div class="container">
+    <div class="row">
+        <div class="col-6 offset-3 p-5">
+            <button class="btn btn-light btn-block" (click)="showAddHospitalMethod()">Add Hospital</button>
+            <button class="btn btn-light btn-block" (click)="showAddVaccinationDoseMethod()">Add Vaccination</button>
+        </div>  
+    </div>
+
+    <!-- add Hospital name -->
+
+    <div class="row" *ngIf="showAddHospital" >
+        <div class="col-4">
+            <form [formGroup]="addHospitalFormValue" (submit)="onAddHospital()">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="text-center">Add Hospital</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="">hospital Name : </label>
+                            <input type="text" class="form-control" formControlName="hospitalName">
+                            <span *ngIf="hospitalNameValidators.touched &&  hospitalNameValidators.invalid "
+                            class="alert alert-danger p-2">
+                               Hospital Name is mandotary !
+                           </span>
+                        </div>
+                        <div class="form-group">
+                            <label for="">hospital Address : </label>
+                            <textarea formControlName="hospitalAddress"  rows="5" 
+                            class="form-control" ></textarea>
+                            <span *ngIf="hospitalAddressValidators.touched &&  hospitalAddressValidators.invalid "
+                            class="alert alert-danger p-2">
+                               hospital Address is mandotary !
+                             </span>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <button class="btn btn-primary form-control" type="submit"
+                                [disabled]="addHospitalFormValue.invalid">Save</button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-danger form-control" type="reset"
+                                (click)="onReset(addHospitalFormValue)">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-8">
+            <table class="table table-light table-hover">
+                <thead class="table-info text-center">
+                    <tr>
+                        <th class="border-end">S. No.</th>
+                        <th class="border-end">Hospial Name</th>
+                        <th class="border-end">Hospital Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let hospital of hospitals">
+                        <td class="border-end">{{hospital.id}}</td>
+                        <td class="border-end">{{hospital.name}}</td>
+                        <td class="border-end">{{hospital.address}}</td>
+                    </tr>   
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add Vaccination  -->
+    <div class="row mt-2" *ngIf="showAddVaccinationDose" >
+        <div class="col-4">
+            <form [formGroup]="addVaccinationFormValue" (submit)="onAddVaccination()">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="text-center text-info">Add Vaccination Term</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="">Vaccination Type : </label>
+                            <input type="text" class="form-control" formControlName="vaccinationName">
+                            <span *ngIf="vaccinationNameValidators.touched &&  vaccinationNameValidators.invalid "
+                            class="alert alert-danger p-2">
+                            Vaccination Type is mandotary !
+                           </span>
+                        </div>
+                        <div class="form-group">
+                            <label for="">About Vaccination : </label>
+                            <textarea formControlName="aboutVaccination"  rows="5" 
+                            class="form-control" ></textarea>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <button class="btn btn-primary form-control" type="submit"
+                                [disabled]="addVaccinationFormValue.invalid">Save</button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-danger form-control" type="reset"
+                                (click)="onReset(addVaccinationFormValue)">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-8">
+            <table class="table table-light table-hover">
+                <thead class="table-info text-center">
+                    <tr>
+                        <th class="border-end">S. No.</th>
+                        <th class="border-end">vaccination Type</th>
+                        <th class="border-end">About Vaccination</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let vaccinationType of vaccinationTypes">
+                        <td class="border-end">{{vaccinationType.id}}</td>
+                        <td class="border-end">{{vaccinationType.type}}</td>
+                        <td class="border-end">{{vaccinationType.about}}</td>
+                    </tr>   
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

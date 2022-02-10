@@ -1,1 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
+body{
+    background-image: url(../src/assets/images/vaccine.jpeg);
+    
+}
+.navbar-brand{
+    font-size: 40px;
+}
+ul{
+    padding-left: 170px;
+}
+a{
+    font-size: 20px;
+}
+a:hover{
+    border-bottom: 1px solid white;
+}
+sup{
+    font-size: 20px;
+}

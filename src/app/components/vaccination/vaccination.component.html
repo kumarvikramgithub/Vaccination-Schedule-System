@@ -1,0 +1,154 @@
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-8 offset-2">  
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Add Vaccination</h3>
+                </div>
+                <div class="card-body">
+                   <form [formGroup]="formValue">
+                       <div class="form-group  my-1">
+                           <div class="row">
+                                <div class="col-6">
+                                    <label for="name">Name of the Patient<sup class="text-danger">*</sup> :</label>
+                                    <select formControlName="selNameOfPatien" class="form-control"(change)="onSelectPatient($event)" >
+                                        <option value="">Select Patient</option>
+                                        <option *ngFor=" let patient of patients" value="{{patient.name}}">{{patient.name}}</option>
+
+                                    </select>
+                                    <span *ngIf="selectedPatientNameValidators.touched &&  selectedPatientNameValidators.invalid "
+                                        class="alert alert-danger p-2">
+                                        Patient selection is mandotary !
+                                    </span>
+                                </div>
+                               <div class="col-6">
+                                    <label for="dob">DOB :</label>
+                                    <input type="date" class="form-control" formControlName="dob"  
+                                     [value]="dobp" readonly>
+                               </div>
+                           </div>
+                        </div>
+                        <div class="form-group row my-1">
+                            <div class="col-6">
+                                <label for="blood">Vaccination <sup class="text-danger">*</sup>:</label>
+                                <select formControlName="selDose" class="form-control">
+                                    <option value="">Select Dose</option>
+                                    <option *ngFor=" let vt of vaccinationTypes" value="{{vt.type}}">{{vt.type}}</option>
+                                    
+                                </select>
+                                <span *ngIf="selectDoseValidators.touched &&  selectDoseValidators.invalid "
+                                    class="alert alert-danger p-2">
+                                     Vaccination Dose selection is mandotary !
+                                </span>
+                            </div>
+                            <div class="col-6">
+                                <label for="weight">Date administered<sup class="text-danger">*</sup> :</label>
+                                <input type="date" class="form-control" formControlName="doa" >
+                                <span *ngIf="patientDoaValidators.touched &&  patientDoaValidators.invalid "
+                                    class="alert alert-danger p-2">
+                                    Patient Date of administered is mandotary !
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row my-1">
+                            <div class="col-6">
+                                <label for="brandName">Brand name :</label>
+                                <!-- <select name="brandname" class="form-control">
+                                    <option value="Bharat-Biotech">Bharat Biotech</option>
+                                    <option value="Serum Institute of India Pvt Ltd">Serum Institute of India Pvt Ltd</option>
+                                    <option value="AstraZeneca">AstraZeneca</option>
+                                    <option value="power-booster">Power booster</option>
+                                </select> -->
+                                <input type="text" class="form-control" formControlName="brandName">
+                            </div>
+                            <div class="col-6">
+                                <label for="hospitalname">Given at :</label>
+                                <select formControlName="selHospital" class="form-control">
+                                    <option value="">Select Hospital</option>
+                                    <option *ngFor="let hospital of hospitals" value="{{hospital.name}}">{{hospital.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row  mt-3">
+                            <div class="col-6">
+                                <button class="btn btn-primary btn-block form-control" type="submit" (click)="onUpdatedPatient()"
+                                [disabled]="formValue.invalid">Save</button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-warning btn-block form-control" type="reset">Cancel</button>
+                            </div>
+                        </div>
+                   </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2 border border-info">
+            <table class="table table-light table-hover">
+                <thead class="table-info text-center">
+                    <tr class="danger">
+                        <th class="border-end" (click)="orderTypeName=orderTypeName==='ASC'?'DESC':'ASC'">
+                            Patient</th>
+                        <th class="border-end"(click)="orderTypeAge=orderTypeAge==='ASC'?'DESC':'ASC'">Age</th>
+                        <th class="border-end" (click)="orderTypeName=orderTypeName==='ASC'?'DESC':'ASC'">Vaccine</th>
+                        <th class="border-end" (click)="orderTypeAge=orderTypeAge==='ASC'?'DESC':'ASC'">Due date</th>
+                        <th class="border-end" (click)="orderTypeAge=orderTypeAge==='ASC'?'DESC':'ASC'">Given On</th>
+                        <th class="border-end" (click)="orderTypeName=orderTypeName==='ASC'?'DESC':'ASC'">Given At</th>
+                        <th class="border-end" (click)="orderTypeName=orderTypeName==='ASC'?'DESC':'ASC'">Brand Given</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let patient of patients | sortPatientAge :orderTypeAge
+                     | sortPatientName: orderTypeName  ">
+                        <td class="border-end">{{patient.name}}</td>
+                        <td class="border-end">{{patient.dob|date}}</td>
+                        <td class="border-end">{{patient.dose}}</td>
+                        <td class="border-end">{{patient.dueDate|date}}</td>
+                        <td class="border-end">{{patient.giveDate|date}}</td>
+                        <td class="border-end">{{patient.hospitalName}}</td>
+                        <td class="border-end">{{patient.brand}}</td>
+                        <!-- <td class="border-end" >
+
+                            <ul *ngFor="let vaccine of patient.vaccine">
+                                <li><b>Dose : {{vaccine.dose}}</b>
+                                    <ul>
+
+                                        <li >Name: {{vaccine.name}}</li>
+                                        <li >Given Date: {{vaccine.giveDate | date}}</li>
+                                        <li>Due Date{{vaccine.dueDate}}</li>
+                                        <li >Brand : {{vaccine.brand}}</li>
+                                    </ul>
+
+                                </li>
+                                
+                            </ul>
+                        </td> -->
+                       
+                    </tr>
+
+                    <!-- sort by Age
+
+                    <tr *ngFor="let patient of patients | sortPatientName :orderType |sortPatientAge: orderType" class="text-center">
+                        <td class="border-end">{{patient.name}}</td>
+                        <td class="border-end">{{patient.dob}}</td>
+                        <td class="border-end">{{patient.vaccine}}</td>
+                        <td class="border-end">{{patient.dueDate}}</td>
+                        <td class="border-end">{{patient.givenOn}}</td>
+                        <td class="border-end">{{patient.brandGiven}}</td>
+                    </tr>-->
+
+                    <!-- sort by vaccine -->
+                    
+                    <!-- <tr *ngFor="let patient of patients | sortPatientName :orderType" class="text-center">
+                        <td class="border-end">{{patient.name}}</td>
+                        <td class="border-end">{{patient.dob}}</td>
+                        <td class="border-end">{{patient.vaccine}}</td>
+                        <td class="border-end">{{patient.dueDate}}</td>
+                        <td class="border-end">{{patient.givenOn}}</td>
+                        <td class="border-end">{{patient.brandGiven}}</td>
+                    </tr> --> 
+                </tbody>
+            </table>
+    </div>
+</div>

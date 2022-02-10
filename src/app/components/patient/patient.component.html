@@ -1,0 +1,90 @@
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-8 offset-2">  
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Add a Patient</h3>
+                    <p class="alert alert-danger" *ngIf="showMessagePatientDuplicate"> “The value provided 
+                        for the field …. Is incorrect or incomplete”<br>
+                        {{uniquePaientNameMessage}}</p>
+                </div>
+                <div class="card-body">
+                   <form [formGroup]='formValue'>
+                       <div class="form-group  my-1">
+                           <label for="name">Name of the patient<sup class="text-danger">*</sup> :</label>
+                           <input type="text" class="form-control" formControlName="name" 
+                           >
+                           <span *ngIf="patientNameValidators.touched &&  patientNameValidators.invalid "
+                            class="alert alert-danger p-2">
+                               Patient name is mandotary !
+                           </span>
+                       </div>
+                       <div class="form-group  my-1">
+                           <div class="row">
+                               <div class="col-6">
+                                    <label for="dob">DOB<sup class="text-danger">*</sup> :</label>
+                                    <input type="date" class="form-control" formControlName="dob" >
+                                    <span *ngIf="patientDobValidators.touched &&  patientDobValidators.invalid "
+                                        class="alert alert-danger p-2">
+                                        Patient Date of Birth is mandotary !
+                                    </span>
+                               </div>
+                               <div class="col-6">
+                                    <label for="gender">Gender :</label>
+                                    <select formControlName="selgender" class="form-control">
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                               </div>
+                           </div>
+                        </div>
+                        <div class="form-group  my-1">
+                            <label for="birthPlace">Place of Birth :</label>
+                            <input type="text" class="form-control" formControlName="birthPlace"
+                            >
+                        </div>
+                        <div class="form-group  my-1">
+                            <label for="blood">Blood Group :</label>
+                            <select formControlName="selblood" class="form-control">
+                                <option value="N/A">Select Blood Group</option>
+                                <option value="o+">O<sup>+</sup></option>
+                                <option value="o-">O<sup>-</sup></option>
+                                <option value="A+">A<sup>+</sup></option>
+                                <option value="A-">A<sup>-</sup></option>
+                                <option value="B+">B<sup>+</sup></option>
+                                <option value="B-">B<sup>-</sup></option>
+                                <option value="AB+">AB<sup>+</sup></option>
+                                <option value="AB-">AB<sup>-</sup></option>
+                            </select>
+                        </div>
+                        <div class="form-group row my-1">
+                            <div class="col-6">
+                                <label for="height">Height :</label>
+                                <input type="number" formControlName="height" placeholder="Decimal"
+                                ng-model="myDecimal | number : 2" class="form-control"
+                                ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" min="1" />
+                            </div>
+                            <div class="col-6">
+                                <label for="weight">Weight :</label>
+                                <input type="number" formControlName="weight" placeholder="Decimal"
+                                 ng-model="myDecimal | number : 2" class="form-control"
+                                 ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" min="1" />
+                            </div>
+                        </div>
+                        <div class="row  mt-3">
+                            <div class="col-6">
+                                <button class="btn btn-primary btn-block form-control" type="submit"
+                                (click)="onAddPatient()"
+                                [disabled]="formValue.invalid">Save</button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-warning btn-block form-control" type="reset"
+                                 (click)="onCancel()">Cancel</button>
+                            </div>
+                        </div>
+                   </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
