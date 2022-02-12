@@ -69,6 +69,7 @@ export class PatientComponent implements OnInit {
       this.patientObject.bloodGroup = this.formValue.value.selblood;
       this.patientObject.height = this.formValue.value.height;
       this.patientObject.weight = this.formValue.value.weight;
+      this.patientObject.vaccine=[];
       this.patientService.addPatients(this.patientObject)
         .subscribe(res => {
           // console.log(res);

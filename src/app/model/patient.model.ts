@@ -15,7 +15,7 @@ export class Patient{
     dueDate:Date
     brand:string
     dose:string
-    // vaccine:Vaccine[]
+    vaccine:Vaccine[]
     // hospital:Hospital[]
 }
 // How did you spend your weekend?

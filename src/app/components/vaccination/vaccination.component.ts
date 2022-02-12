@@ -24,17 +24,32 @@ export class VaccinationComponent implements OnInit {
   
   patients:Patient[]=[];
   hospitals:Hospital[]=[];
+  vaccines:Vaccine[]=[];
   vaccinationTypes:VaccinationType[]=[];
   selectedPatient:Patient;
+
+  //object of all possible resources
   patientObject:Patient=new Patient();
   vaccineObject:Vaccine=new Vaccine();
   hospitalObject:Hospital=new Hospital();
 
   dobp:string;
+  doseLeft:string[]=[];
+  doseCompleted:string[]=[];
+  allDoseCompleted:boolean=false;
+  //maxDate for disable future date selecion
+  maxDate: any=this.getCurrentDate();
+
   ngOnInit(): void {
+    console.log(this.maxDate)
      // getting patient info
      this.patientService.getPatients().subscribe(res=>{
       this.patients=res;
+    })
+    //
+    this.vaccinationService.getVaccine()
+    .subscribe((res)=>{
+      this.vaccines=res;
     })
     // getting Hospital info
     this.hospitalService.getHospial().subscribe(res=>{
@@ -44,6 +59,10 @@ export class VaccinationComponent implements OnInit {
     // getting vaccinationTypes info
     this.vaccinationService.getVaccinationType().subscribe(res=>{
       this.vaccinationTypes=res;
+    });
+    // getting vaccinationTypes info
+    this.vaccinationService.getVaccine().subscribe(res=>{
+      this.vaccines=res;
     });
     // form building
     this.formValue=this.formBuilde.group({
@@ -56,24 +75,35 @@ export class VaccinationComponent implements OnInit {
     })
    
   }
-  get selectedPatientNameValidators(){
-    return this.formValue.get('selNameOfPatien');
-  }
-  get selectDoseValidators(){
-    return this.formValue.get('selDose');
-  }
-  get patientDoaValidators(){
-    return this.formValue.get('doa');
-  }
+  
   onSelectPatient(selectedPatient:any){
-    //  this.patientDob=this.patients.filter(e => e.id==selectedPatient.target.value);
+      // after reselecting
+      this.allDoseCompleted=false;
+      this.doseCompleted=[];
+      this.doseLeft=[];
+      
      for(let patient of this.patients){
         if (patient.name===selectedPatient.target.value) {
           this.selectedPatient=patient;
         }
      }
      this.dobp=this.selectedPatient.dob;
-    //  console.log(new Date(this.dobp));
+
+    for (let vcc of this.vaccines) {
+      if (vcc.patientId===this.selectedPatient.id) {
+        this.doseCompleted.push(vcc.dose);
+      }
+    }
+
+    for(let vcc of this.vaccinationTypes){
+      if (!this.doseCompleted.includes(vcc.type)) {
+        this.doseLeft.push(vcc.type);       
+      }
+    }
+    if(this.doseLeft.length==0){
+      this.allDoseCompleted=true;
+    }
+
   }
   onUpdatedPatient(){
     this.patientObject.name=this.formValue.value.selNameOfPatien;
@@ -88,37 +118,68 @@ export class VaccinationComponent implements OnInit {
     this.patientObject.dueDate=dueDate;
 
     this.patientObject.hospitalName=this.formValue.value.selHospital;
+
+
+    
+    // adding new features vaacines
+    this.vaccineObject.dose=this.formValue.value.selDose;
+    this.vaccineObject.giveDate=this.formValue.value.doa;
+    this.vaccineObject.brand=this.formValue.value.brandName;
+    this.vaccineObject.dueDate=dueDate;
+    this.vaccineObject.givenAt=this.formValue.value.selHospital;
+    this.patientObject.vaccine=[this.vaccineObject];
+    
+    this.vaccineObject.patientId=this.selectedPatient.id;
+    // ending vaccines features
+   
+
+    
+
     this.patientService.updatePatients(this.patientObject,this.selectedPatient.id)
     .subscribe((res)=>{
       alert("Patient Vaccinated SuccessFuly");
-      this.ngOnInit();
-      this.formValue.reset();
+      this.vaccinationService.addVaccine(this.vaccineObject)
+      .subscribe((res)=>{
+      })
+      // this.ngOnInit();
+      // this.formValue.reset();
     },
     err=>{alert("Something wrong");
     console.log(err)});
     
-    // this.vaccineObject.dose=this.formValue.value.selDose;
-    // this.vaccineObject.giveDate=this.formValue.value.doa;
-    // this.vaccineObject.brand=this.formValue.value.brandName;
-    // this.vaccineObject.patientId=this.selectedPatient.id;
 
-    // this.hospitalObject.name=this.formValue.value.selHospital;
-    // this.hospitalObject.patientId=this.selectedPatient.id;
-
-    // console.log(this.vaccineObject);
-    // this.patientService.addVaccine(this.vaccineObject)
-    // .subscribe((res)=>{
-    //   this.patientService.addHospital(this.hospitalObject).subscribe(
-    //     (res)=>{
-    //       console.log(res);
-    //     },
-    //     err=>{console.log("Hospital Error")}
-    //   )
-    // },
-    //   err=>console.log("Vaccince error")
-    // )
   }
   orderTypeName='ASC';
   orderTypeAge='ASC';
+  get selectedPatientNameValidators(){
+    return this.formValue.get('selNameOfPatien');
+  }
+  get selectDoseValidators(){
+    return this.formValue.get('selDose');
+  }
+  get patientDoaValidators(){
+    return this.formValue.get('doa');
+  }
 
+  //
+  getCurrentDate(){
+    let date:Date=new Date();
+
+    var day:any=date.getDate();
+    if(day<10){
+      day="0"+day;
+    }
+
+
+    var month:any=date.getMonth()+1;
+    if(month<10){
+      month="0"+month;
+    }
+
+    var year:any=date.getFullYear();
+
+    let todays:string=year+"-"+month+"-"+day;
+
+    return todays;
+  }
 }
